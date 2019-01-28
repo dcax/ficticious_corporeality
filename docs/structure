@@ -1,0 +1,9 @@
+MAIN STRUCTURE OF THE PROJECT
+
+Universe object
+-Instant with function that produces next instants.
+-Instant composed of particles.
+-Takes config option: default is Newtonian.
+
+
+
