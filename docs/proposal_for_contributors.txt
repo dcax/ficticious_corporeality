@@ -10,6 +10,7 @@ Why contribute (to IB students)?
 - This improves understanding of physics and forces us to think about independence and algorithms.
 - This is not the physics IA. However, this is a general framework to create simulated date for the physics IA. 
 - It looks good to CS employers to have a large number of public projects and something that is a group effort and scietific will reflect well on you.
+- Experience with version control (GIT) is always good and good for employers.
 
 
 What this is not:
