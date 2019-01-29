@@ -1,7 +1,13 @@
 
-import scipy, numpy, matplotlib
+from Subsystems import *
+from Boundary import *
 
-dt = .0001 #in s. Time intreval used. 
+
+import scipy, matplotlib
+
+import numpy as np
+import pandas as pd
+
 
 
 class VerseManager: 
@@ -18,13 +24,12 @@ class VerseManager:
         self.verse = verse
 
 
-        return super().__init__(*args, **kwargs)
 
     def perturb(self): 
         # do 1 intreval.
-        old = self.now
-
-        self.now = self.verse.perturb(old)
+        self.verse.perturb(self.now)
+        
+        #self.now = self.verse.perturb(old)
     
     def progress(self, n, sample=lambda instant: {}, every=0, ignoring_first=0):
         ## moves universe forward n steps
@@ -49,48 +54,83 @@ class Instant:
     #This is a universe object and contians the nature of the project.
     #particles stored in clump. 
 
-    def __init__(self, clump=[], newtonian=True, **kwargs):
+    def __init__(self, clump=[], subsystems=[], misc=[], newtonian=True, **kwargs):
         #this creates a universe from nothing. 
+        self.clump = clump
+        self.subsystems = subsystems
+        self.misc = misc #particles not in subsys.
+        #subsystems are parts of the system with boundary conditions.
         pass
     
 
+
+
+        
+    
 
 class Verse():
     #This is the general pattern for universes of particles and evolving them
     #Represents a stationary universe. 
     def __init__(self, *args, **kwargs):
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
     
     def interactions(self,instant):
         #Takes pairs of particles and gets interactions pairs efficiently.
         #Does not include forcing
         return []
     
-    def forcing(self,instant,time):
+    def force(self,instant,time):
         #does forcing terms. Boundaries?
+        #Instant time dependent.
         pass
 
     def perturb(self,old):
         #Takes old instant and produces new instant.
-        interactions = self.interactions(old)
-
-
+        pass
+        #Too general without third law and superposition.
 
 class Verse1(Verse):
     #This is a standard universe object that has our specifications about how it should work.
 
-    #Newtonian, fixed interactions, forcing option, fixed particles. 
+    #Newtonian, fixed interactions, forcing option, conserved particle number. 
+    #Also forces superimpose, leading to easier computation. 
 
     def __init__(self, clump=[], **kwargs):
         super().__init__(clump=clump, newtonian=True, **kwargs)
 
-        self.interactions = None #initialise interactions
+        self.interactions_register = [] #initialise interactions
     
     def interactions(self,instant):
-        if self.interactions is not None:
-            return
-        pass
-        #this uses newton's third and fixed particles to find efficient interactions.
+        #only computes this once at beginning.
+        if self.interactions_register is not None:
+            return self.interactions_register
+        
+
+        #this uses newton's third and fixed particle number and subsystems to find efficient interactions.
+        #clump = instant.clump
+        subsystems = instant.subsystems
+        for subsys in subsystems:
+            assert isinstance(subsys, Subsystem)
+            self.interactions_register.extend(subsys.interactions)
+
+        #Do something with mischelaneos particles.
+
+
+
+    def perturb(self, old):
+        #super().perturb(old)
+        interactions = self.interactions(old)
+        for interaction in interactions:
+            interaction.enact()
+
+        #forcing terms
+
+        #modernize.
+        for particle in old.clump:
+            particle.update()
+        #modernize kills old data and loads new
+
+
 
 
 

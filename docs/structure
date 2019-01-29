@@ -5,5 +5,6 @@ Universe object
 -Instant composed of particles.
 -Takes config option: default is Newtonian.
 
+Goal: Add concurrency on different subsystems to work more at once. 
 
 
