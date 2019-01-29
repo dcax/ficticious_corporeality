@@ -1,0 +1,18 @@
+
+
+0. Add new subsys - straight wires and path wires and linked wires as sheet.
+1. Read write instant and verse to csv file.
+2. Boundary conditions.
+3. Couple systems.
+4. Add dispapative and forcing terms.
+5. Plot in 3d with distint subsys.
+6. Make different subsys concurrent.
+7. Animate plots.
+8. TEST TEST TEST with some built exaple models.
+9. Design work for ease of use in creating models.
+10. Add prebuilt forcing terms for each subsys like different waves using fourier coefficients and pulses.
+11. GUI and file reporting charts?
+12. Descriptive stats.
+
+
+

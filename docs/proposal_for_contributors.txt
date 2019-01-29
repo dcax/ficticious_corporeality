@@ -1,0 +1,32 @@
+
+Hello, welcome to fictitious corporeality, a physical simulator for coupled systems.
+
+The idea for this is to take a complicated physical problem like progressing waves hitting a dispersive media
+and models the fundamental parts of it, taking efficient shortcuts.
+
+Why contribute (to IB students)?
+- Provides CAS experiences or is CAS project in service and creativity. 
+- Most of us don't have a lot of experience on group projects. This remedies this.
+- This improves understanding of physics and forces us to think about independence and algorithms.
+- This is not the physics IA. However, this is a general framework to create simulated date for the physics IA. 
+- It looks good to CS employers to have a large number of public projects and something that is a group effort and scietific will reflect well on you.
+
+
+What this is not:
+- This is not a brute force particle simulator that simulates n particles each of which exerts forces on each other.
+- A simulator for quantum or even physics with electromagnetism (currently).
+
+What this is:
+- Efficiency focused!
+- Designed to be a framework that a relative novice can use to probe physics questions.
+
+Efficiency:
+- A uncoordinated group of particles that each exerts forces on all other particles is going to run in quadratic time.
+- Each subsystem should be linear in number of forces to apply each term. 
+
+What to do first?
+- Try reading the docs files.
+- Try reading code. Start at core.py or tests.py.
+- Ask Dylan questions about how the code work (they will be answered in a FAQ document).
+
+
