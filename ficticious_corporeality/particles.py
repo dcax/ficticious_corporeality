@@ -53,10 +53,11 @@ class Particle:
 class ContainedParticle(Particle):
     #container deals with forces and with movement
 
-    def __init__(self, mass=1, loc=np.array([0.0, 0.0, 0.0]), velocity=np.array([0.0, 0.0, 0.0]), container=None, **kwargs):
+    def __init__(self, mass=1, loc=np.array([0.0, 0.0, 0.0]), velocity=np.array([0.0, 0.0, 0.0]), container=None, container_loc=None, **kwargs):
         super().__init__(mass=mass, loc=loc, velocity=velocity, **kwargs)
         assert container is not None
         self.container = container
+        self.container_loc = container_loc
 
     def findForce(self, origin=None):
         assert origin is not None
@@ -73,10 +74,6 @@ class ContainedParticle(Particle):
     
     def __str__(self):
         return self.container.stringify(self)
-
-
-
-
 
 ##UNUSED
 class LinkedParticle(Particle): #Particle linked to neighbors which do not themselves need to be Linked. 

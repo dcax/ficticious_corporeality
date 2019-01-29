@@ -16,3 +16,6 @@ def project_onto_unit_vector(v=None,unit=None):
     assert v is not None and unit is not None
     #we assume used properly so that there is not a necessary check on this each time.
     return np.dot(v,unit)*unit
+
+def project_ortho_to_unit_vector(v=None,unit=None):
+    return v - project_onto_unit_vector(v,unit)

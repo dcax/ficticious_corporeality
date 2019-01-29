@@ -31,13 +31,13 @@ class VerseManager:
         
         #self.now = self.verse.perturb(old)
     
-    def progress(self, n, sample=lambda instant: {}, every=0, ignoring_first=0):
+    def progress(self, n, sample=lambda instant, n: {}, every=0, ignoring_first=0):
         ## moves universe forward n steps
         ##option to run sampling function every some such times ignoring the first some values.
         for i in range(n):
             self.perturb()
             if(i >= ignoring_first and every is not 0 and i % every == 0):
-                sample(self.now)
+                sample(self.now, i)
 
         
 
@@ -54,6 +54,14 @@ class Instant:
     #This is a universe object and contians the nature of the project.
     #particles stored in clump. 
 
+    @staticmethod
+    def make_instant_from_subsystems(subsystems=[]):
+        clump = []
+        for subsys in subsystems:
+            clump.extend(subsys.clump)
+        instant = Instant(clump=clump,subsystems=subsystems,misc=[],newtonian=True)
+        return instant
+
     def __init__(self, clump=[], subsystems=[], misc=[], newtonian=True, **kwargs):
         #this creates a universe from nothing. 
         self.clump = clump
@@ -62,17 +70,21 @@ class Instant:
         #subsystems are parts of the system with boundary conditions.
         pass
     
+    def report(self):
+        for subsystem in self.subsystems:
+            subsystem.report_subsystem()
+            print("")
 
 
 
         
     
 
-class Verse():
+class Verse:
     #This is the general pattern for universes of particles and evolving them
     #Represents a stationary universe. 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, newtonain=True, *args, **kwargs):
+        self.newtonian = newtonain
     
     def interactions(self,instant):
         #Takes pairs of particles and gets interactions pairs efficiently.
@@ -95,8 +107,8 @@ class Verse1(Verse):
     #Newtonian, fixed interactions, forcing option, conserved particle number. 
     #Also forces superimpose, leading to easier computation. 
 
-    def __init__(self, clump=[], **kwargs):
-        super().__init__(clump=clump, newtonian=True, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__( newtonian=True, **kwargs)
 
         self.interactions_register = [] #initialise interactions
     

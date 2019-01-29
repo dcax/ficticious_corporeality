@@ -12,8 +12,10 @@ import pandas as pd
 class Subsystem: 
     #contains properties of subsystems and boundaries. Individually contians particles.
 
-    def __init__(self, boundary=None):
+    def __init__(self, boundary=None, name="Cal"):
         self.boundary = boundary
+        self.name = name
+        self.clump = []
         pass
     
     def interactions(self):
@@ -31,15 +33,17 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
     #- particless mass (uniform)
     #- distance between 
 
-    def __init__(self, n=1,m=1, uniform_mass=1, boundary=None, constrained_movement=True):
+    def __init__(self, name="Cal", n=1,m=1, uniform_mass=1, boundary=None, constrained_movement=True, vertical_tension=0, horiz_tension=0):
 
         assert boundary is not None
         assert isinstance(boundary, ParallelogramBoundary) 
         # so far only parallelogram boundary supported
 
-        super().__init__(boundary=boundary)
+        super().__init__(boundary=boundary, name=name)
 
         self.constrained = constrained_movement
+        self.vertical_tension = vertical_tension
+        self.horiz_tension = horiz_tension
 
         self.locus = boundary.locus()
         self.n = n #Number particles in horiz dir
@@ -53,23 +57,31 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         self.length = self.boundary.length() - 2*self.boundary.uniform_margin
         self.height = self.boundary.height() - 2*self.boundary.uniform_margin
 
+        self.horiz_scale = self.length / self.m
+        self.vertical_scale = self.height / self.n
+
         assert self.length > 0
         assert self.height > 0
 
         self.init_clump()
        
-            
-
-
         ##Link particles for ease.
+
+
+    def report_subsystem(self): #reports the data as strings
+        print("Subsystem: {}.".format(self.name))
+        for index, particle in np.ndenumerate(self.clump):
+            print("\t"+particle)
+
+
 
     def init_clump(self):
          ##Init particles
         self.clump = np.zeros(self.m * self.n).reshape((self.m,self.n))
         self.past_interactions = []
 
-        dh = self.horiz_axis * (self.m / self.length)
-        dv = self.vertical_axis * (self.n / self.height) 
+        dh =  get_unit_vector(self.horiz_axis) * self.horiz_scale
+        dv = get_unit_vector(self.vertical_axis) * self.vertical_scale
 
         #start is initial refrence frame adjusted for bounds.
         start = self.locus + self.horiz_axis * self.margin + self.vertical_axis * self.margin
@@ -80,7 +92,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
 
                 
 
-                p = ContainedParticle(container=self,mass=self.mass,loc=loc) #Inits linked particle at location with Euler.
+                p = ContainedParticle(container=self,mass=self.mass,loc=loc, container_loc=(i,j)) #Inits linked particle at location with Euler.
                 self.clump[i,j] = p
 
                 ##Adding interactions
@@ -115,7 +127,20 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         return interactions
 
     def findForce(self, to = None, origin = None):
-            pass
+        #This works for linear displacement tension as is used on modeling sheets
+        displacement = origin.loc - to.loc
+        normal_displacement = project_onto_unit_vector(displacement,unit=self.normal)
+        force = np.zeros(3)
+        if(to.container_loc[0] == origin.container_loc[0]):
+            #Same i, same horizontal position therefore displacement from vertical
+            force += (self.vertical_tension/self.vertical_scale) * normal_displacement
+        elif(to.container_loc[1] == origin.container_loc[1]):
+            #Same j, same vertical position therefore displacement from horizontal
+            force += (self.horiz_tension/self.horiz_scale) * normal_displacement
+        
+        return force
+
+
 
     def apply(self,force=0, to=None):
         apply(force=force,to=self)
@@ -138,5 +163,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
 
     def stringify(self,p):
         #renders a particle a string
-        return "Particle in subsys @ ({},{},{}) with p = {}".format(p.loc[0],p.loc[1],p.loc[2],p.abs_p())
+        return "Particle in subsys {} @ ({},{},{}) with p = {}".format(self.name, p.loc[0],p.loc[1],p.loc[2],p.abs_p())
 
+
+#TODO: Boundaries, strings attatched, stiff strings, etcetera. 

@@ -4,3 +4,6 @@ import ficticious_corporeality
 
 print("Testing")
 
+test_suite()
+
+
