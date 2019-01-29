@@ -1,8 +1,8 @@
-from Particles import *
-from Boundary import *
-from Interactions import *
-from Constants import *
-from utility import *
+from .particles import *
+from .boundary import *
+from .interactions import *
+from .constants import *
+from .utility import *
 
 
 ### This contains the bulk of the subsystems defined for Verse1. 
@@ -54,8 +54,9 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         self.normal = self.boundary.normal
 
         self.margin = self.boundary.uniform_margin
-        self.length = self.boundary.length() - 2*self.boundary.uniform_margin
-        self.height = self.boundary.height() - 2*self.boundary.uniform_margin
+        assert type(self.margin) is float
+        self.length = self.boundary.length() - (2*self.boundary.uniform_margin)
+        self.height = self.boundary.height() - (2*self.boundary.uniform_margin)
 
         self.horiz_scale = self.length / self.m
         self.vertical_scale = self.height / self.n
@@ -71,13 +72,13 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
     def report_subsystem(self): #reports the data as strings
         print("Subsystem: {}.".format(self.name))
         for index, particle in np.ndenumerate(self.clump):
-            print("\t"+particle)
+            print("\t"+str(particle))
 
 
 
     def init_clump(self):
          ##Init particles
-        self.clump = np.zeros(self.m * self.n).reshape((self.m,self.n))
+        self.clump = np.empty(shape=(self.m,self.n), dtype=object)
         self.past_interactions = []
 
         dh =  get_unit_vector(self.horiz_axis) * self.horiz_scale
@@ -109,7 +110,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         #does not include boundaries
         #assume particle only interacts with neighbors (4 particles)
         #Assume newtonian context so that one interaction suffices for many.
-        number_interactions = 2*(self.n-1)*(self.m-1) #DOES NOT INCLUDE BOUNDARY CONDITIONS
+        #From wrong model: number_interactions = 2*(self.n-1)*(self.m-1) #DOES NOT INCLUDE BOUNDARY CONDITIONS
         #Draw out graph to find this. 
 
         #interactions = np.ones(shape=number_interactions, dtype=tuple, order='C')
@@ -121,14 +122,14 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         ###Assume fixed interactions
 
         interactions = self.past_interactions
-
-        assert len(interactions) == number_interactions
+        #print("interactions found, expected = {}, {}.".format(len(interactions), number_interactions))
+        #assert len(interactions) == number_interactions
 
         return interactions
 
     def findForce(self, to = None, origin = None):
         #This works for linear displacement tension as is used on modeling sheets
-        displacement = origin.loc - to.loc
+        displacement =  origin.loc - to.loc
         normal_displacement = project_onto_unit_vector(displacement,unit=self.normal)
         force = np.zeros(3)
         if(to.container_loc[0] == origin.container_loc[0]):
@@ -138,32 +139,38 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
             #Same j, same vertical position therefore displacement from horizontal
             force += (self.horiz_tension/self.horiz_scale) * normal_displacement
         
+        #print("Finding force on object {} from {}.".format(to,origin))
+        #assert np.linalg.norm(force) == 0.0
+
         return force
 
 
 
-    def apply(self,force=0, to=None):
-        apply(force=force,to=self)
+    def apply(self,force=0.0, to=None):
+        apply(force=force,to=to)
 
 
     def update(self, p=None):
         assert p is not None
         p.m += p.dm #I dont expect to need to change mass, but IDK.
+        
+        #if(np.linalg.norm(p.dv) != 0.0):
+        #   print("Updating particle {} with dv = {}.".format(p,p.dv))
 
         #simple Euler's method.
-        dr = (p.v+p.dv/2)*dt
+        dr = (p.v + p.dv/2)*dt
         if self.constrained: 
             p.loc += project_onto_unit_vector(dr,unit=self.normal)
         else:
             p.loc += dr
 
         p.v += p.dv
-        p.dm = 0
-        p.dv = np.array([0.0,0.0,0.0])
+        p.dm = 0.0
+        p.dv = p.dv * 0.0
 
     def stringify(self,p):
         #renders a particle a string
-        return "Particle in subsys {} @ ({},{},{}) with p = {}".format(self.name, p.loc[0],p.loc[1],p.loc[2],p.abs_p())
+        return "Particle in subsys {} @ ({},{},{}) with p = {} at velocity = {}.".format(self.name, p.loc[0],p.loc[1],p.loc[2],p.abs_p(),p.v)
 
 
 #TODO: Boundaries, strings attatched, stiff strings, etcetera. 

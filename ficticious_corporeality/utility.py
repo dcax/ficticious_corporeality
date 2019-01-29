@@ -1,15 +1,18 @@
-from Constants import *
+from .constants import *
 
+from pprint import pprint
 import numpy as np
 
 def get_unit_vector(v):
     l = np.linalg.norm(v)
-    assert l is not 0
+    assert l is not 0.0
     return v/l
 
-def apply(force=0,to=None):
+def apply(force=0.,to=None):
     #applies force to particle (does not actually move it (that happens in modernize))
+    assert to is not None
     #Euler's method:
+    #pprint(force)
     to.dv += force*dt/to.m #Uses superposition of impulses
 
 def project_onto_unit_vector(v=None,unit=None):

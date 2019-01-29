@@ -1,5 +1,5 @@
-from Constants import *
-from utility import *
+from .constants import *
+from .utility import *
 
 import numpy as np
 import pandas as pd
@@ -14,7 +14,7 @@ class Particle:
         self.loc = loc
         self.v = velocity
 
-        self.dm = 0
+        self.dm = 0.0
         self.dv = np.array([0.0,0.0,0.0])
 
     def p(self):
@@ -22,10 +22,11 @@ class Particle:
         return self.m * self.v
     
     def abs_p(self): #absolute value/magnitude of momentum
-        return np.linalg.norm(self.p)
+        return np.linalg.norm(self.p())
     
     def update(self):
         #update values after a stage.
+        print("Non contained update!")
 
         self.m += self.dm #I dont expect to need to change mass, but IDK.
 
@@ -43,11 +44,11 @@ class Particle:
         #This finds the force from the particles but does not apply anything.
         return 0
     
-    def apply(self,force=0):
+    def apply(self,force=0.0):
        apply(force=force,to=self)
     
     def __str__(self):
-        return "Particle @ ({},{},{}) with p = {}".format(self.loc[0],self.loc[1],self.loc[2],self.abs_p())
+        return "Particle @ ({},{},{}) with p = {} and velocity = {}.".format(self.loc[0],self.loc[1],self.loc[2],self.abs_p(),self.v)
 
 
 class ContainedParticle(Particle):
@@ -61,7 +62,8 @@ class ContainedParticle(Particle):
 
     def findForce(self, origin=None):
         assert origin is not None
-        self.container.findForce(to=self, origin=origin)
+        #print("Finding force.")
+        return self.container.findForce(to=self, origin=origin)
     
     def apply(self, force=0):
 
@@ -70,7 +72,7 @@ class ContainedParticle(Particle):
     
     def update(self):
         #prefers modernizing through container.
-        self.container.modernize(self)
+        self.container.update(self)
     
     def __str__(self):
         return self.container.stringify(self)

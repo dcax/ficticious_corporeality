@@ -17,7 +17,8 @@ class Interaction:
 
         if not self.newtonain:
             assert False #This cannot happen
-        
+
+        #print("Enacting interaction on pair of particles.")
         #forces
         f = self.x.findForce(origin=self.y)
         self.x.apply(force=f)

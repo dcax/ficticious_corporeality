@@ -1,2 +1,2 @@
 
-dt = .0001 #in s. Time intreval used. 
+dt = .00010 #in s. Time intreval used. 

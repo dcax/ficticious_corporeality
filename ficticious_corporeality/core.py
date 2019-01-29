@@ -1,12 +1,12 @@
 
-from Subsystems import *
-from Boundary import *
-
+from .boundary import *
+from .subsystems import *
 
 import scipy, matplotlib
 
 import numpy as np
 import pandas as pd
+from pprint import pprint
 
 
 
@@ -58,7 +58,7 @@ class Instant:
     def make_instant_from_subsystems(subsystems=[]):
         clump = []
         for subsys in subsystems:
-            clump.extend(subsys.clump)
+            clump.extend(np.asarray(subsys.clump.flatten()))
         instant = Instant(clump=clump,subsystems=subsystems,misc=[],newtonian=True)
         return instant
 
@@ -70,7 +70,9 @@ class Instant:
         #subsystems are parts of the system with boundary conditions.
         pass
     
-    def report(self):
+    def report(self, n = None):
+        if n is not None:
+            print("n = {}.".format(n))
         for subsystem in self.subsystems:
             subsystem.report_subsystem()
             print("")
@@ -114,7 +116,7 @@ class Verse1(Verse):
     
     def interactions(self,instant):
         #only computes this once at beginning.
-        if self.interactions_register is not None:
+        if len(self.interactions_register) != 0:
             return self.interactions_register
         
 
@@ -123,21 +125,25 @@ class Verse1(Verse):
         subsystems = instant.subsystems
         for subsys in subsystems:
             assert isinstance(subsys, Subsystem)
-            self.interactions_register.extend(subsys.interactions)
-
+            #pprint(subsys.interactions())
+            self.interactions_register.extend(subsys.interactions())
+        
         #Do something with mischelaneos particles.
+        return self.interactions_register
 
 
 
     def perturb(self, old):
         #super().perturb(old)
         interactions = self.interactions(old)
+        #pprint(interactions)
         for interaction in interactions:
             interaction.enact()
 
         #forcing terms
 
         #modernize.
+        #pprint(vars(old))
         for particle in old.clump:
             particle.update()
         #modernize kills old data and loads new

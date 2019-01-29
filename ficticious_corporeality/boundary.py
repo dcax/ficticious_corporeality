@@ -1,4 +1,4 @@
-from utility import *
+from .utility import *
 
 import numpy as np
 import pandas as pd
@@ -19,6 +19,8 @@ class ParallelogramBoundary(RegularBoundary):
     #Points specified in refrence frame of origin (universal) 
     # and specified counterclockwise starting in quadrant II.
 
+    #TODO: FIX ordering because this is too sensistive to handedness.
+
     def __init__(self, x0=np.zeros(3), x1=np.zeros(3), x2=np.zeros(3), uniform_margin=0):
         super().__init__()
         self.uniform_margin = uniform_margin # margin within this boundary construct. 
@@ -31,7 +33,7 @@ class ParallelogramBoundary(RegularBoundary):
     def length(self):
         #somewhat arbitrary on what side is length and what is width.
         #calculated on fly more expensive but this should run about once per instance.
-        np.linalg.norm(self.points[0]-self.points[1])
+        return np.linalg.norm(self.points[0]-self.points[1])
     
     def height(self):
         return np.linalg.norm(self.points[0]-self.points[2])
