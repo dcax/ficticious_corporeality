@@ -13,6 +13,8 @@
 10. Add prebuilt forcing terms for each subsys like different waves using fourier coefficients and pulses.
 11. GUI and file reporting charts?
 12. Descriptive stats.
+13. Hypothesis testing.
+14. Manipulate graphs to manipulate data. 
 
 
 
