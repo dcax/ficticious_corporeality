@@ -1,0 +1,18 @@
+This is for a later project where the physics of rigid bodies is described.
+
+Rigid bodies have total mass M and center of mass r_c (in inversal reference frame). 
+
+For a rigid body with center of mass r_c (all vectors),
+r_i = position of ith particle in origin reference frame = r_c + r_hat*R.
+R is distance from r_c to r_i and r_hat is along that displacement.
+Diffrentiating,using rigidity (distance between points is constant),
+v_i = v_c + omega*theta*R. 
+Same angular velocity and angular accelaration for each particle by rigidity. 
+-> a_i = a_c + alpha * theta * R - omega^2 * r_hat * R.
+m_i*a_i = F_i.
+(r_hat*R) x F_i = Torque on particle i = T_i.
+m_i*R^2*k_hat*alpha = T_i.
+Summing, T = total torque,
+T = S(m_i*R_i^2)*alpha_hat.
+
+***Disregard what comes before. 

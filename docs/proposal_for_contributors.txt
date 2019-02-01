@@ -4,6 +4,13 @@ Hello, welcome to fictitious corporeality, a physical simulator for coupled syst
 The idea for this is to take a complicated physical problem like progressing waves hitting a dispersive media
 and models the fundamental parts of it, taking efficient shortcuts.
 
+Requirements:
+- Willing to read some good code and some poorly written code.
+- Able to give honest criticism of code.
+- Able to design usable interfaces, apis, and data formats.
+- Able to code python. <-- Basically this. 
+- Able to learn using documentation.
+
 Why contribute (to IB students)?
 - Provides CAS experiences or is CAS project in service and creativity. 
 - Most of us don't have a lot of experience on group projects. This remedies this.

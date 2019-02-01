@@ -15,5 +15,8 @@
 12. Descriptive stats.
 13. Rotational motion and rigid bodies. 
 14. Fluid regions (differend dissipative effects).
+15. Hypothesis testing.
+16. Manipulate graphs to manipulate data. 
+
 
 

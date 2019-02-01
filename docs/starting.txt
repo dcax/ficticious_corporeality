@@ -1,0 +1,6 @@
+
+To get started on this CAS Project:
+0. Get a github account and make pull request on this.
+1. Review python fundamentals if necessary. (use https://learnxinyminutes.com/docs/python3/)
+2. Try reading some code starting in tests.py. Ask Dylan about this.
+3. Look at projects. 
