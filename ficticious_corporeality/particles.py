@@ -51,6 +51,7 @@ class Particle:
         return "Particle @ ({},{},{}) with p = {} and velocity = {}.".format(self.loc[0],self.loc[1],self.loc[2],self.abs_p(),self.v)
 
 
+
 class ContainedParticle(Particle):
     #container deals with forces and with movement
 
