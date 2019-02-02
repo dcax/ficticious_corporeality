@@ -175,13 +175,15 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
 
 #TODO: Boundaries, strings attatched, stiff strings, etcetera. 
 
-class Wire(Subsystem):
-    #wire is a subsystem consisting of linked particles along a path.
+class String(Subsystem):
+    #String is a subsystem consisting of linked particles along a path.
 
     @staticmethod
-    def make_wire(uniform_mass=1, mass = None, ):
-        pass
+    def make_string(uniform_mass=1, mass = None, count=1, path=None):
+        #mass is a function that determines the mass of each particle
+        assert path is not None and isinstance(path, )
+        
 
 
     def __init__(self, boundary=None, name='Cal'):
-        return super().__init__(boundary=boundary, name=name)
+        super().__init__(boundary=boundary, name=name)
