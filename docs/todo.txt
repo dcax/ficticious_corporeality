@@ -8,7 +8,7 @@
 5. Plot in 3d with distint subsys.
 6. Make different subsys concurrent.
 7. Animate plots.
-8. TEST TEST TEST with some built exaple models.
+8. TEST TEST TEST with some built example models.
 9. Design work for ease of use in creating models.
 10. Add prebuilt forcing terms for each subsys like different waves using fourier coefficients and pulses.
 11. GUI and file reporting charts?
@@ -17,6 +17,11 @@
 14. Fluid regions (differend dissipative effects).
 15. Hypothesis testing.
 16. Manipulate graphs to manipulate data. 
+
+
+
+
+
 
 
 
