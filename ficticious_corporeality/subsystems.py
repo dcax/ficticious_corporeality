@@ -39,7 +39,9 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         assert isinstance(boundary, ParallelogramBoundary) 
         # so far only parallelogram boundary supported
 
-        super().__init__(name=name)
+        super().__init__(boundary=boundary, name=name)
+
+        self.boundary = boundary
 
         self.constrained = constrained_movement
         self.vertical_tension = vertical_tension
@@ -185,5 +187,5 @@ class String(Subsystem):
         
 
 
-    def __init__(self, boundary=None, name='Cal'):
-        super().__init__(boundary=boundary, name=name)
+    def __init__(self, boundary=None, name='StandardStringyBoi'):
+        super().__init__(name=name)
