@@ -8,6 +8,3 @@ from .tests import *
 
 def main():
     print("Sup, folks.")
-
-
-

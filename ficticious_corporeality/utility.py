@@ -3,6 +3,7 @@ from .constants import *
 from pprint import pprint
 import numpy as np
 
+# Gets unit or direction vector associated with the vector (v).
 def get_unit_vector(v):
     l = np.linalg.norm(v)
     assert l is not 0.0
