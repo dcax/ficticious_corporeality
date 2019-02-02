@@ -22,3 +22,8 @@ def verse_trial_1():
     manager = VerseManager(initial_conditions=Instant.make_instant_from_subsystems([sheet1]),verse=v)
 
     manager.progress(n= 1000, sample= lambda i, n: {i.report(n=n)}, every=2,ignoring_first=0)
+
+
+
+
+
