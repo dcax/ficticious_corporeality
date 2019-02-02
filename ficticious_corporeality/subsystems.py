@@ -12,9 +12,10 @@ import pandas as pd
 class Subsystem:
     #contains properties of subsystems and boundaries. Individually contians particles.
 
-    def __init__(self, boundary = None, name="Cal"):
+    def __init__(self, boundary = None, name="Cal", plot_config=None):
         self.boundary = boundary # boundary not neccessary for defining a subsystem, but here for efficiency
         self.name = name
+        self.plot_config = plot_config #Plot config control the way that plots are configured
         self.clump = np.array([])
         pass
     
@@ -24,6 +25,7 @@ class Subsystem:
     def interactions(self):
         pass
 
+    
 
 
 class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
@@ -36,13 +38,13 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
     #- particless mass (uniform)
     #- distance between
 
-    def __init__(self, name="Cal", n=1,m=1, uniform_mass=1, boundary=None, constrained_movement=True, vertical_tension=0, horiz_tension=0):
+    def __init__(self, plot_config=None, name="Cal", n=1,m=1, uniform_mass=1, boundary=None, constrained_movement=True, vertical_tension=0, horiz_tension=0):
 
         assert boundary is not None
         assert isinstance(boundary, ParallelogramBoundary)
         # so far only parallelogram boundary supported
 
-        super().__init__(boundary=boundary, name=name)
+        super().__init__(boundary=boundary, plot_config=plot_config, name=name)
 
         self.boundary = boundary
 
@@ -190,7 +192,7 @@ class String(Subsystem):
 
 
 
-    def __init__(self, boundary=None, name='Ariadne', particles=[]):
-        super().__init__(name=name, boundary=boundary)
+    def __init__(self, plot_config=None, boundary=None, name='Ariadne', particles=[]):
+        super().__init__(name=name, plot_config=plot_config, boundary=boundary)
         self.clump = np.array(particles)
 

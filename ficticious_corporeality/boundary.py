@@ -27,7 +27,7 @@ class ParallelogramBoundary(RegularBoundary):
         self.points = [x0, x1, x2, x0 + x2 - x1]
         h, v = self.axes()
         self.normal = np.cross(h,v) #Normal vector for constrained movement.
-        #makes unitary assuming has length
+        #makes unitary assuming has length (non degenerate parallelogram)
         self.normal = get_unit_vector(self.normal)
 
     def length(self):
