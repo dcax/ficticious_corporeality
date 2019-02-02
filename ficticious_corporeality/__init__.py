@@ -1,7 +1,6 @@
 
 from .core import *
 from .utility import *
-from .plotting import *
 
 from .tests import *
 

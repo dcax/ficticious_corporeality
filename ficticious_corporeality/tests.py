@@ -5,7 +5,7 @@ from .plotting import *
 
 def test_suite():
     verse_trial_1()
-
+    render()
 
 #test
 def verse_trial_1():
