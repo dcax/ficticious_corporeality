@@ -8,14 +8,14 @@ class Interaction:
         assert y is not None
         self.x = x
         self.y = y
-        self.newtonain = newtonian
+        self.newtonian = newtonian
 
 
     def enact(self):
-        #performs interaction on two particles. 
-        #Assumes newtonian and that interaction only works between two particles and not many. 
+        #performs interaction on two particles.
+        #Assumes newtonian and that interaction only works between two particles and not many.
 
-        if not self.newtonain:
+        if not self.newtonian:
             assert False #This cannot happen
 
         #print("Enacting interaction on pair of particles.")
@@ -23,6 +23,3 @@ class Interaction:
         f = self.x.findForce(origin=self.y)
         self.x.apply(force=f)
         self.y.apply(force=-f) #Uses Newton's third Law
-
-
-        
