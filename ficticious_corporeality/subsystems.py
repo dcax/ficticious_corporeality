@@ -5,11 +5,11 @@ from .constants import *
 from .utility import *
 
 
-### This contains the bulk of the subsystems defined for Verse1. 
+### This contains the bulk of the subsystems defined for Verse1.
 import numpy as np
 import pandas as pd
 
-class Subsystem: 
+class Subsystem:
     #contains properties of subsystems and boundaries. Individually contians particles.
 
     def __init__(self, boundary = None, name="Cal"):
@@ -17,7 +17,7 @@ class Subsystem:
         self.name = name
         self.clump = []
         pass
-    
+
     def interactions(self):
         pass
 
@@ -26,17 +26,17 @@ class Subsystem:
 class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
     #contains rubbersheet schematics
     #Assume particles evenly spaced and linked at four points.
-    #Particles constrained to move along normals only (optional). 
+    #Particles constrained to move along normals only (optional).
     #Params:
     #- Horizontal tension, vertical tension.
     #- n by m
     #- particless mass (uniform)
-    #- distance between 
+    #- distance between
 
     def __init__(self, name="Cal", n=1,m=1, uniform_mass=1, boundary=None, constrained_movement=True, vertical_tension=0, horiz_tension=0):
 
         assert boundary is not None
-        assert isinstance(boundary, ParallelogramBoundary) 
+        assert isinstance(boundary, ParallelogramBoundary)
         # so far only parallelogram boundary supported
 
         super().__init__(boundary=boundary, name=name)
@@ -67,7 +67,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         assert self.height > 0
 
         self.init_clump()
-       
+
         ##Link particles for ease.
 
 
@@ -93,7 +93,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
             for j in range(self.n):
                 loc = start + i*dh + j*dv
 
-                
+
 
                 p = ContainedParticle(container=self,mass=self.mass,loc=loc, container_loc=(i,j)) #Inits linked particle at location with Euler.
                 self.clump[i,j] = p
@@ -107,20 +107,20 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
                     self.past_interactions.append(interaction)
 
 
-    
+
     def interactions(self):
         #does not include boundaries
         #assume particle only interacts with neighbors (4 particles)
         #Assume newtonian context so that one interaction suffices for many.
         #From wrong model: number_interactions = 2*(self.n-1)*(self.m-1) #DOES NOT INCLUDE BOUNDARY CONDITIONS
-        #Draw out graph to find this. 
+        #Draw out graph to find this.
 
         #interactions = np.ones(shape=number_interactions, dtype=tuple, order='C')
         ### Here we initialise an object to be populated and returned later.
 
         #interactions = pd.DataFrame()
 
-         
+
         ###Assume fixed interactions
 
         interactions = self.past_interactions
@@ -140,7 +140,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         elif(to.container_loc[1] == origin.container_loc[1]):
             #Same j, same vertical position therefore displacement from horizontal
             force += (self.horiz_tension/self.horiz_scale) * normal_displacement
-        
+
         #print("Finding force on object {} from {}.".format(to,origin))
         #assert np.linalg.norm(force) == 0.0
 
@@ -155,13 +155,13 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
     def update(self, p=None):
         assert p is not None
         p.m += p.dm #I dont expect to need to change mass, but IDK.
-        
+
         #if(np.linalg.norm(p.dv) != 0.0):
         #   print("Updating particle {} with dv = {}.".format(p,p.dv))
 
         #simple Euler's method.
         dr = (p.v + p.dv/2)*dt
-        if self.constrained: 
+        if self.constrained:
             p.loc += project_onto_unit_vector(dr,unit=self.normal)
         else:
             p.loc += dr
@@ -175,7 +175,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         return "Particle in subsys {} @ ({},{},{}) with p = {} at velocity = {}.".format(self.name, p.loc[0],p.loc[1],p.loc[2],p.abs_p(),p.v)
 
 
-#TODO: Boundaries, strings attatched, stiff strings, etcetera. 
+#TODO: Boundaries, strings attatched, stiff strings, etcetera.
 
 class String(Subsystem):
     #String is a subsystem consisting of linked particles along a path.
@@ -184,7 +184,7 @@ class String(Subsystem):
     def make_string(uniform_mass=1, mass = None, count=1, path=None):
         #mass is a function that determines the mass of each particle
         assert path is not None and isinstance(path, )
-        
+
 
 
     def __init__(self, boundary=None, name='StandardStringyBoi'):
