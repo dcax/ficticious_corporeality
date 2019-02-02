@@ -141,6 +141,7 @@ class Verse1(Verse):
             interaction.enact()
 
         #forcing terms
+        
 
         #modernize.
         #pprint(vars(old))

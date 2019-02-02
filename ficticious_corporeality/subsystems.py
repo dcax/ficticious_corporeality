@@ -12,8 +12,8 @@ import pandas as pd
 class Subsystem: 
     #contains properties of subsystems and boundaries. Individually contians particles.
 
-    def __init__(self, boundary=None, name="Cal"):
-        self.boundary = boundary
+    def __init__(self, name="Cal"):
+        #self.boundary = boundary - boundary not neccessary for defining a subsystem
         self.name = name
         self.clump = []
         pass
@@ -39,7 +39,7 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         assert isinstance(boundary, ParallelogramBoundary) 
         # so far only parallelogram boundary supported
 
-        super().__init__(boundary=boundary, name=name)
+        super().__init__(name=name)
 
         self.constrained = constrained_movement
         self.vertical_tension = vertical_tension
@@ -174,3 +174,16 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
 
 
 #TODO: Boundaries, strings attatched, stiff strings, etcetera. 
+
+class String(Subsystem):
+    #String is a subsystem consisting of linked particles along a path.
+
+    @staticmethod
+    def make_string(uniform_mass=1, mass = None, count=1, path=None):
+        #mass is a function that determines the mass of each particle
+        assert path is not None and isinstance(path, )
+        
+
+
+    def __init__(self, boundary=None, name='Cal'):
+        super().__init__(boundary=boundary, name=name)
