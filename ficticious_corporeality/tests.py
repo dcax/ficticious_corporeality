@@ -13,7 +13,7 @@ def verse_trial_1():
         np.array([0,10,0]),
         np.array([0,0,0]),
         uniform_margin=.1)
-
+    
     sheet1 = Sheet(name="major1", boundary=square, uniform_mass=1, n=5, m=5, constrained_movement=True, vertical_tension=10, horiz_tension=10)
     sheet1.clump[1,1].v = np.array([0.0,0.0,10.0])
 
