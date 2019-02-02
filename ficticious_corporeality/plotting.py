@@ -1,18 +1,6 @@
+# Plotting/GUI
+import matplotlib.pyplot as plt
 
-
-#Where core of plot making utilities are.
-
-import numpy as np
-import matplotlib as mp
-
-
-
-
-
-
-
-
-
-
-
-
+plt.plot([1, 2, 3, 4])
+plt.ylabel('show numbres')
+plt.show()
