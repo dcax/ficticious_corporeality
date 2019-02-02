@@ -1,9 +1,6 @@
 #!/usr/bin/env python
-
 import ficticious_corporeality
 
-print("Testing")
+print("Testing.")
 
 ficticious_corporeality.test_suite()
-
-
