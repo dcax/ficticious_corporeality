@@ -12,8 +12,8 @@ import pandas as pd
 class Subsystem: 
     #contains properties of subsystems and boundaries. Individually contians particles.
 
-    def __init__(self, name="Cal"):
-        #self.boundary = boundary - boundary not neccessary for defining a subsystem
+    def __init__(self, boundary = None, name="Cal"):
+        self.boundary = boundary # boundary not neccessary for defining a subsystem, but here for efficiency
         self.name = name
         self.clump = []
         pass
