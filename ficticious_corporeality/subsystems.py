@@ -15,9 +15,12 @@ class Subsystem:
     def __init__(self, boundary = None, name="Cal"):
         self.boundary = boundary # boundary not neccessary for defining a subsystem, but here for efficiency
         self.name = name
-        self.clump = []
+        self.clump = np.array([])
         pass
     
+    def get_particles(self):
+        return np.asarray(self.clump.flatten)
+
     def interactions(self):
         pass
 
@@ -187,5 +190,7 @@ class String(Subsystem):
         
 
 
-    def __init__(self, boundary=None, name='StandardStringyBoi'):
-        super().__init__(name=name)
+    def __init__(self, boundary=None, name='Ariadne', particles=[]):
+        super().__init__(name=name, boundary=boundary)
+        self.clump = np.array(particles)
+

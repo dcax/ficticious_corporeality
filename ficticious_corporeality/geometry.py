@@ -19,13 +19,13 @@ class ClosedPath(Path):
     @classmethod
     def make_closed_polygon_path(points=[]):
         assert len(points) != 0
-        
+
 
 
 
 
     def __init__(self, *args, **kwargs):
-        return super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 
