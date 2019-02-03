@@ -4,9 +4,9 @@ from .subsystems import *
 from .plotting import *
 
 def test_suite(gui=True):
-    verse_trial_1()
+    manager = verse_trial_1()   
     if gui:
-        render()
+        render(manager)
     verse_trial_2()
 
 #test
@@ -25,6 +25,7 @@ def verse_trial_1():
     manager = VerseManager(initial_conditions=Instant.make_instant_from_subsystems([sheet1]),verse=v)
 
     manager.progress(n= 10, sample= lambda i, n: {i.report(n=n)}, every=2,ignoring_first=0)
+    return manager
 
 
 
