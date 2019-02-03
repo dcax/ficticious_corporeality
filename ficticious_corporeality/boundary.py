@@ -8,7 +8,10 @@ import pandas as pd
 ### More complicated bounds constructed from simpler ones. 
 
 class Boundary:
-    pass #most general
+    def __str__(self):
+        return ""
+
+    pass #most general boundary
 
 class RegularBoundary(Boundary):
     pass #some unspecified properties
@@ -45,6 +48,9 @@ class ParallelogramBoundary(RegularBoundary):
     def locus(self):
         #returns focus point of parallelogram
         return self.points[0]
+
+    def __str__(self): #This represents a parallelogram as a string for printing
+        return "Parallelogram with points {}, {}, {}, {}.".format(self.points[0], self.points[1], self.points[2], self.points[3])
     
     
 

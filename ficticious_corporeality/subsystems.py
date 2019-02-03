@@ -25,6 +25,15 @@ class Subsystem:
     def interactions(self):
         pass
 
+    def report_subsystem(self): #reports the data as strings
+        print("Subsystem: {}.".format(self.name))
+
+        print("With boundary {}.".format(self.boundary))
+
+        for index, particle in np.ndenumerate(self.clump):
+            print("\t"+str(particle))
+
+
 
 
 
@@ -76,10 +85,6 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
         ##Link particles for ease.
 
 
-    def report_subsystem(self): #reports the data as strings
-        print("Subsystem: {}.".format(self.name))
-        for index, particle in np.ndenumerate(self.clump):
-            print("\t"+str(particle))
 
 
 
