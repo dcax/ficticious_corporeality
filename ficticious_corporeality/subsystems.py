@@ -18,14 +18,14 @@ class Subsystem:
         self.plot_config = plot_config #Plot config control the way that plots are configured
         self.clump = np.array([])
         pass
-    
+
     def get_particles(self):
-        return np.asarray(self.clump.flatten)
+        return np.asarray(self.clump.flatten())
 
     def interactions(self):
         pass
 
-    
+
 
 
 class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
@@ -195,4 +195,3 @@ class String(Subsystem):
     def __init__(self, plot_config=None, boundary=None, name='Ariadne', particles=[]):
         super().__init__(name=name, plot_config=plot_config, boundary=boundary)
         self.clump = np.array(particles)
-
