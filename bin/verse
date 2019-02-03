@@ -1,6 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import ficticious_corporeality
+import argparse
+
 
 print("Testing.")
 
-ficticious_corporeality.test_suite()
+parser = argparse.ArgumentParser()
+parser.add_argument('--nogui', action="store_true")
+#nogui specifies whether to run tests with or without the graphical component. #default is nogui
+args = parser.parse_args() 
+
+
+ficticious_corporeality.test_suite(gui=not args.nogui)
