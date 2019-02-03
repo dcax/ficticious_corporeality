@@ -62,6 +62,8 @@ class ContainedParticle(Particle):
         assert container is not None
         self.container = container
         self.container_loc = container_loc
+        self.loc = loc
+
 
     def findForce(self, origin=None):
         assert origin is not None
@@ -79,6 +81,7 @@ class ContainedParticle(Particle):
 
     def __str__(self):
         return self.container.stringify(self)
+
 
 ##UNUSED
 class LinkedParticle(Particle): #Particle linked to neighbors which do not themselves need to be Linked.

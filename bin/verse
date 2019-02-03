@@ -8,7 +8,7 @@ print("Testing.")
 parser = argparse.ArgumentParser()
 parser.add_argument('--nogui', action="store_true")
 #nogui specifies whether to run tests with or without the graphical component. #default is nogui
-args = parser.parse_args() 
+args = parser.parse_args()
 
-
-ficticious_corporeality.test_suite(gui=not args.nogui)
+#gui=not args.nogui
+ficticious_corporeality.test_suite()

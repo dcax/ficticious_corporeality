@@ -3,11 +3,8 @@ from .constants import *
 from .subsystems import *
 from .plotting import *
 
-def test_suite(gui=True):
-    manager = verse_trial_1()
-    if gui:
-        plot(manager)
-    verse_trial_2()
+def test_suite():
+    plot(verse_trial_1())
 
 #test
 def verse_trial_1():
