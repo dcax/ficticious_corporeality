@@ -9,6 +9,7 @@ setup(name='ficticious_corporeality',
         license='GNU',
         scripts=['bin/verse'],
         install_requires=[
+            'argparse',
             'matplotlib','numpy','scipy','pandas',
             ],
         packages=['ficticious_corporeality'],
