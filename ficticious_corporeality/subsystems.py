@@ -212,3 +212,9 @@ class String(Subsystem):
     def __init__(self, plot_config=None, boundary=None, name='Ariadne', particles=[]):
         super().__init__(name=name, plot_config=plot_config, boundary=boundary)
         self.clump = np.array(particles)
+
+
+
+
+class SpringSheet(Sheet):
+    pass #This will represent a sheet capable of transverse and logitudonal (general) oscillations
