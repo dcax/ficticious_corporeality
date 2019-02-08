@@ -9,6 +9,8 @@ from .utility import *
 import numpy as np
 import pandas as pd
 
+from colorama import Back, Style
+
 class Subsystem:
     #contains properties of subsystems and boundaries. Individually contians particles.
 
@@ -182,7 +184,17 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
 
     def stringify(self,p):
         #renders a particle a string
-        return "Particle in subsys {} @ ({},{},{}) with p = {} at velocity = {}.".format(self.name, p.loc[0],p.loc[1],p.loc[2],p.abs_p(),p.v)
+
+        ##change the background of the velocity to be red if negative and green if positive
+        #velocity = ""
+        #vel_dot = np.dot(p.v, self.normal)
+        #if vel_dot < 0:
+        #    velocity += Back.RED
+        #elif vel_dot > 0:
+        #    velocity += Back.GREEN
+        #velocity += str(vel_dot) + Style.RESET_ALL
+
+        return "Particle in subsys {} @ ({},{},{}) with p = {} at velocity = {}.".format(self.name, p.loc[0], p.loc[1], p.loc[2], p.abs_p(), colorize_vector(p.v))
 
 
 #TODO: Boundaries, strings attatched, stiff strings, etcetera.
