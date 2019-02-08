@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from pprint import pprint
 
+from colorama import init as colorama_init
 
 
 class VerseManager: 
@@ -23,6 +24,8 @@ class VerseManager:
         self.now = initial_conditions
         self.verse = verse
 
+        #initialize the colorama library for printing colored text in the terminal
+        colorama_init()
 
 
     def perturb(self): 

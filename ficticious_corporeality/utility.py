@@ -3,6 +3,8 @@ from .constants import *
 from pprint import pprint
 import numpy as np
 
+from colorama import Back, Style
+
 # Gets unit or direction vector associated with the vector (v).
 def get_unit_vector(v):
     l = np.linalg.norm(v)
@@ -23,3 +25,23 @@ def project_onto_unit_vector(v=None,unit=None):
 
 def project_ortho_to_unit_vector(v=None,unit=None):
     return v - project_onto_unit_vector(v,unit)
+
+#returns a string representing an array with postive numbers being green and negative numbers red
+def colorize_vector(vector=None):
+    #TODO: assert vector is [numpy array]
+
+    output = "["
+    for i in range(vector.size):
+        #give negative numbers a red background and positive numbers a green background
+        if vector[i] < 0:
+            output += Back.RED
+        elif vector[i] > 0:
+            output += Back.GREEN
+        
+        output += str(vector[i]) + Style.RESET_ALL
+
+        if i < vector.size - 1:
+            output += " "
+
+    output += "]"
+    return output
