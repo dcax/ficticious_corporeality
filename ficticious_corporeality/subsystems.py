@@ -185,16 +185,10 @@ class Sheet(Subsystem): #Linear subsystem (runs in O(number objects = n*m))
     def stringify(self,p):
         #renders a particle a string
 
-        ##change the background of the velocity to be red if negative and green if positive
-        #velocity = ""
-        #vel_dot = np.dot(p.v, self.normal)
-        #if vel_dot < 0:
-        #    velocity += Back.RED
-        #elif vel_dot > 0:
-        #    velocity += Back.GREEN
-        #velocity += str(vel_dot) + Style.RESET_ALL
+        #get index of particle in clump
+        pindex = np.argwhere(p.container.clump == p)
 
-        return "Particle in subsys {} @ ({},{},{}) with p = {} at velocity = {}.".format(self.name, p.loc[0], p.loc[1], p.loc[2], p.abs_p(), colorize_vector(p.v))
+        return "Particle {} in subsys {} @ ({},{},{}) with p = {} at velocity = {}.".format(pindex, self.name, p.loc[0], p.loc[1], p.loc[2], p.abs_p(), colorize_vector(p.v))
 
 
 #TODO: Boundaries, strings attatched, stiff strings, etcetera.
