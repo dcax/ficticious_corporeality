@@ -16,6 +16,25 @@ class Boundary:
 class RegularBoundary(Boundary):
     pass #some unspecified properties
 
+class RandomBoundary(Boundary):
+    #interface for a boundary that randomly picks points in it.
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def random_point(self):
+        return np.zeros(3) #purposes is randomly selecting a point to create a particle
+
+class BoundlessBoundary(RandomBoundary):
+    #dumb boundary for testing purposes and unifying the framework.
+    #pretty much all of space
+    def __init__(self,center=np.zeros(3), sigma = 1.0):
+        self.center = center #points will normally be distributed around center
+        self.sigma = sigma #standard deviation of random point
+
+    def random_point(self):
+        return np.random.normal(size=3,loc=self.center,scale=self.sigma)
+
 class ParallelogramBoundary(RegularBoundary):
     #Boundary with parallogram outer segment.
     #Uniquely specified by three points.

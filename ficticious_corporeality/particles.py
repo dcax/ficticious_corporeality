@@ -1,5 +1,5 @@
 from .constants import *
-from .utility import *
+from .utility import get_unit_vector, apply
 
 import numpy as np
 import pandas as pd
@@ -8,11 +8,18 @@ class Particle:
     #By default exists in 3D space.
 
     #X: loc[0], Y:loc[1], Z:loc[2]
-    def __init__(self, mass=1, loc=np.array([0.0,0.0,0.0]), velocity=np.array([0.0,0.0,0.0]), **kwargs):
+    #Has mass and charqe inately
+
+    def do_impulse(self, dp = np.zeros(3)):
+        #does some impulse to a particle
+        self.dv += dp/self.m #unused
+
+    def __init__(self, mass=1.0, charge=0.0, loc=np.array([0.0,0.0,0.0]), velocity=np.array([0.0,0.0,0.0]), **kwargs):
 
         self.m = mass
         self.loc = loc
         self.v = velocity
+        self.q = charge
 
         self.dm = 0.0
         self.dv = np.array([0.0,0.0,0.0])
@@ -40,7 +47,7 @@ class Particle:
         self.dm = 0
         self.dv = np.array([0.0,0.0,0.0])
 
-    def findForce(self,origin=None):
+    def find_force(self,origin=None):
 
         assert origin is not None
         #This finds the force from the particles but does not apply anything.
@@ -65,10 +72,10 @@ class ContainedParticle(Particle):
         self.loc = loc
 
 
-    def findForce(self, origin=None):
+    def find_force(self, origin=None):
         assert origin is not None
         #print("Finding force.")
-        return self.container.findForce(to=self, origin=origin)
+        return self.container.find_force(to=self, origin=origin)
 
     def apply(self, force=0):
 
