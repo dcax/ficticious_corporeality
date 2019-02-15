@@ -25,5 +25,5 @@ def plot(manager):
             zs.append(subsystems[i].get_particles()[j].loc[2])
 
     #Scatter plot subsystem particles.
-    axes.scatter(xs, ys, zs, s = 20, c='red', depthshade = True)
+    axes.scatter(xs, ys, zs, s = 20, c='blue', depthshade = True)
     plt.show()
