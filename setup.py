@@ -10,6 +10,7 @@ setup(name='ficticious_corporeality',
         scripts=['bin/verse'],
         install_requires=[
             'argparse',
+            'colorama',
             'matplotlib','numpy','scipy','pandas',
             ],
         packages=['ficticious_corporeality'],

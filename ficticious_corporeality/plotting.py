@@ -2,28 +2,26 @@
 from mpl_toolkits.mplot3d import Axes3D
 
 import matplotlib.pyplot as plt
-from pprint import pprint
 import numpy as np
+import pprint
 
 def plot(manager):
     #Plot setup
     fig = plt.figure()
     axes = fig.add_subplot(111, projection='3d')
-    subsystems = manager.now.subsystems
-
-    #Values of x, y, and z for all particle values
     xs = []
     ys = []
     zs = []
 
-    #Iterates through every particle in the first subsystem.
-    #TODO: Expand to multi-colored and multi-subsystem plotting. (Multi-subsystem is available, however there is only one sub-system being received at the moment.)
-    for i in range(len(subsystems)):
-        for j in range(subsystems[i].get_particles().size):
-            xs.append(subsystems[i].get_particles()[j].loc[0])
-            ys.append(subsystems[i].get_particles()[j].loc[1])
-            zs.append(subsystems[i].get_particles()[j].loc[2])
+    #zs = [] Default is 0
 
-    #Scatter plot subsystem particles.
+    #Iterates through every particle in the first subsystem and adds the respective x, y, z value to it's respective array.
+    #TODO: Expand to multi-colored and multi-subsystem plotting
+    for j in range(len(manager.now.subsystems)):
+        for i in range(manager.now.subsystems[j].get_particles().size):
+            xs.append(manager.now.subsystems[j].get_particles()[i].loc[0])
+            ys.append(manager.now.subsystems[j].get_particles()[i].loc[1])
+            zs.append(manager.now.subsystems[j].get_particles()[i].loc[2])
+            print(vars(manager.now.subsystems[j]))
     axes.scatter(xs, ys, zs, s = 20, c='red', depthshade = True)
     plt.show()

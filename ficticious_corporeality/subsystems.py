@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 import scipy.constants as const
 
+from colorama import Back, Style
+
 class Subsystem:
     #contains properties of subsystems and boundaries. Individually contians particles.
 
@@ -299,7 +301,19 @@ class Sheet(PrettySubsystem): #Linear subsystem (runs in O(number objects = n*m)
 
     def stringify(self,p):
         #renders a particle a string
-        return "Particle in subsys {} @ ({},{},{}) with p = {} at velocity = {}.".format(self.name, p.loc[0],p.loc[1],p.loc[2],p.abs_p(),p.v)
+
+        #get index of particle in clump
+        p_index = np.argwhere(p.container.clump == p)
+
+        #TODO: add 'nocolor' option for disabling terminal colors
+        #if color:
+        p_loc = colorize_vector(p.loc)
+        p_v = colorize_vector(p.v)
+        #else:
+        #    p_loc = p.loc
+        #    p_v = p.v
+
+        return "Particle {} in subsys {} @ {} with p = {} at velocity = {}.".format(p_index, self.name, p_loc, p.abs_p(), p_v)
 
 
 #TODO: Boundaries, strings attatched, stiff strings, etcetera.
