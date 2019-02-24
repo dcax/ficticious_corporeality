@@ -19,9 +19,10 @@ def plot(manager):
     #TODO: Expand to multi-colored and multi-subsystem plotting
     for j in range(len(manager.now.subsystems)):
         for i in range(manager.now.subsystems[j].get_particles().size):
-            xs.append(manager.now.subsystems[j].get_particles()[i].loc[0])
-            ys.append(manager.now.subsystems[j].get_particles()[i].loc[1])
-            zs.append(manager.now.subsystems[j].get_particles()[i].loc[2])
-            print(vars(manager.now.subsystems[j]))
+                particle = manager.now.subsystems[j].get_particles()[i]
+                xs.append(particle.loc[0])
+                ys.append(particle.loc[1])
+                zs.append(particle.loc[2])
+                pprint(vars(manager.now.subsystems[j]))
     axes.scatter(xs, ys, zs, s = 20, c='red', depthshade = True)
     plt.show()
