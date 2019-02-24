@@ -31,15 +31,58 @@ class VerseManager:
         
         #self.now = self.verse.perturb(old)
     
-    def progress(self, n, sample=lambda instant, n: {}, every=0, ignoring_first=0):
+    def progress(self, n, sample=lambda instant, n: {}, every=0, ignoring_first=0, store_every=None):
         ## moves universe forward n steps
         ##option to run sampling function every some such times ignoring the first some values.
+
+        #particle_record_schema = np.dtype([('m',np.float64),('q',np.float64, 3),('r',np.float64),('v',np.float64, 3)]) 
+        #this is basically a strucutred record that is optimised
+        
+        if store_every is not None: #This stores the value in an array that each particle keeps.
+            entry_count = n//store_every
+            
+            for p in self.now.notable:
+                p.history = pd.DataFrame(columns=["m","q","vx","vy","vz","rx","ry","rz"], index=np.arange(n//store_every), dtype=np.float64)
+                #np.zeros(dtype=particle_record_schema, shape=entry_count)
+                #pd.DataFrame(dtype=particle_record_schema, )
+                #pd.DataFrame(columns=["m","q","v","r"], index=np.arange(n//store_every))
+                #here we initialise history for each object of the requisite length
+
         for i in range(n):
-            self.perturb()
+
+            if(store_every is not None and i % store_every == 0):
+                #here we cause the particle to store its data
+                for p in self.now.notable:
+                    #record = {"m": p.m, "q": p.q, "v": p.v, "r": p.loc}
+                    
+                    #print("Storing {} for {}-th time.".format(p,i//store_every))
+
+                    record = p.history.iloc[i//store_every]
+                    record['m'] = p.m
+                    record['q'] = p.q
+                    record['rx'] = p.loc[0]
+                    record['ry'] = p.loc[1] #stores them component wise
+                    record['rz'] = p.loc[2]
+                    record['vx'] = p.v[0]
+                    record['vy'] = p.v[1]
+                    record['vz'] = p.v[2]
+                    #reg = p.history.iloc[i//store_every]
+                    
+
+                    #loc copies record to row.
+                    #this saves particle data
+                
+
             if(i >= ignoring_first and every is not 0 and i % every == 0):
                 sample(self.now, i)
+            #we do sampling first so as to consider better changes (but last time is superfluous)
 
-        
+            self.perturb()
+            
+
+            
+
+     
 
 
 
@@ -67,6 +110,7 @@ class Instant:
         self.clump = clump
         self.subsystems = subsystems
         self.misc = misc #particles not in subsys.
+        self.notable = clump #ideally clump and notable are different, because we only want to document some particles, not all
         #subsystems are parts of the system with boundary conditions.
         pass
     
@@ -113,6 +157,7 @@ class Verse1(Verse):
         super().__init__( newtonian=True, **kwargs)
 
         self.interactions_register = [] #initialise interactions
+        self.system_interactions_register = []
     
     def interactions(self,instant):
         #only computes this once at beginning.
@@ -130,18 +175,31 @@ class Verse1(Verse):
         
         #Do something with mischelaneos particles.
         return self.interactions_register
+    
+    def system_interactions(self, instant):
+        #gets interactions with system (damping, forcing, walls, etcetera)
+        if len(self.system_interactions_register) != 0:
+            return self.system_interactions_register
+        
+        for subsys in instant.subsystems:
+            assert isinstance(subsys,Subsystem)
+            self.system_interactions_register.extend(subsys.subsystem_interactions())
+        
+        return self.system_interactions_register
 
 
 
     def perturb(self, old):
         #super().perturb(old)
         interactions = self.interactions(old)
+        system_interactions = self.system_interactions(old)
         #pprint(interactions)
         for interaction in interactions:
             interaction.enact()
 
         #forcing terms
-        
+        for system_interaction in system_interactions:
+            system_interaction.enact()
 
         #modernize.
         #pprint(vars(old))

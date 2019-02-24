@@ -9,6 +9,7 @@ class Particle:
 
     #X: loc[0], Y:loc[1], Z:loc[2]
     #Has mass and charqe inately
+    #also can store itself selectively (as time series)
 
     def do_impulse(self, dp = np.zeros(3)):
         #does some impulse to a particle
@@ -23,6 +24,8 @@ class Particle:
 
         self.dm = 0.0
         self.dv = np.array([0.0,0.0,0.0])
+        self.history = np.zeros(0)#pd.DataFrame(data=None,index=np.arange(0))  #usually this should be series
+    
 
 
 
@@ -35,7 +38,7 @@ class Particle:
 
     def update(self):
         #update values after a stage.
-        print("Non contained update!")
+        #print("Non contained update!")
 
         self.m += self.dm #I dont expect to need to change mass, but IDK.
 
@@ -68,7 +71,7 @@ class ContainedParticle(Particle):
         super().__init__(mass=mass, loc=loc, velocity=velocity, **kwargs)
         assert container is not None
         self.container = container
-        self.container_loc = container_loc
+        self.container_loc = container_loc #used for better printing
         self.loc = loc
 
 
@@ -111,3 +114,11 @@ class LinkedParticle(Particle): #Particle linked to neighbors which do not thems
 class BoundaryParticle(Particle):
     pass
     #particle with boundary mechanism built in.
+
+
+def dist(x,y): #gets euclidean distance between points
+    if isinstance(x,Particle) and isinstance(y,Particle):
+        #distance defined by positions
+        x = x.loc
+        y = y.loc
+    return np.linalg.norm(x,y)

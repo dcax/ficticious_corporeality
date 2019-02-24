@@ -4,6 +4,7 @@ from .boundary import *
 from .interactions import *
 from .constants import *
 from .utility import *
+from .path_geometry import *
 
 ### This contains the bulk of the subsystems defined for Verse1.
 import numpy as np
@@ -21,7 +22,7 @@ class Subsystem:
         self.clump = np.array([])
         pass
 
-    def get_particles(self):
+    def get_particles(self): #used in plotting
         return np.asarray(self.clump.flatten())
 
     def interactions(self):
@@ -46,6 +47,7 @@ class PrettySubsystem(Subsystem):
     def nice_representation(self):
         return np.empty(0) #rotates to better frame, etcetera
 
+
 class EnvironmentSubsystem(Subsystem):
     #This subsystem by definition has each particle interacting with the environment
     #This is the subsys its in
@@ -56,38 +58,47 @@ class EnvironmentSubsystem(Subsystem):
 class BrownianSubsystem(PrettySubsystem):
     #This is designed for brownian motion type simulations.
     #Also should simulate ohmic materials.
-    def __init__(self, boundary=None, particles=[], name='Voq', sigma=1.0, damping=0.0, plot_config=None):
+    def __init__(self, boundary=None, particles=[], name='Voq', sigma=1.0E-10, damping=0.0, plot_config=None):
         super().__init__(boundary=boundary, name=name, plot_config=plot_config)
-        self.sigma = sigma
-        self.damping = damping
+        self.sigma = np.float64(sigma)
+        self.damping = np.float64(damping)
 
     def find_force(self,to=None, origin=None):
         return np.zeros(3) #There should not be interparticle forces in this model
 
-    def find_sys_force(self, on=None):
+    def find_subsystem_force(self, on=None):
         assert on is not None #finds forces on a particle due to its inclusion in a system
         return self.find_collision_force(on=on) + self.find_damping_force(on=on) + self.find_principle_force(on=on)
 
     def find_collision_force(self,on=None):
         assert on is not None
         #This represents a force of Gaussian white noise
-        std_noise = np.random.normal()
+        noise = np.random.normal(scale=self.sigma)
         #eventually I would like to generate random samples in  batches of 2^16 and get them via coroutine.
-        noise = self.sigma*std_noise
-        on.dv += noise * dt/ on.mass
+        #noise = std_noise
+        return noise
 
     def find_damping_force(self,on=None):
         assert on is not None
         #this does the standard damping term that is proportional to speed (high speed daming)
-        on.dv += - self.damping * on.v * dt / on.m
+        #on.dv += - self.damping * on.v * dt / on.m
+        #print(self.damping)
+        f = - on.v * self.damping
+        print(f)
+        print(on.v)
+        #if np.linalg.norm(f) != 0.0:
+        #    print(f)
+        return f*0.0
 
     def find_principle_force(self,on=None):
         assert on is not None
         #This should be where overriding to devine brownian motion field on the subject is applied to create aggregate movement.
         return np.zeros(3)
+
     
     def update(self,p = None):
-            std_update_of_particle(p=p) #defers update to standard because no constraints imposed
+        print("Does standard brownian update.")
+        std_update_of_particle(p=p) #defers update to standard because no constraints imposed
 
     
 
@@ -101,22 +112,42 @@ class OhmicMaterial(BrownianSubsystem,EnvironmentSubsystem):
         #num is the number of electrons to populate
 
         assert isinstance(boundary,RandomBoundary) #random boundary contains code to randomly find points in boundary
-        clump = np.empty(shape=num)
+        clump = np.empty(shape=num,dtype=Particle)
+        sys = OhmicMaterial(name=name, particles=clump, electric_field = electric_field, boundary=boundary)
         for n in range(num):
             random_location = boundary.random_point() #we just assume there are no collisions because they are incredibly unlikely
-            p = Particle(mass = mass, charge = q, velocity= v, loc=random_location)
+            p = ContainedParticle(container=sys, mass = mass, charge = q, velocity= v, loc=random_location)
             clump[n] = p
-        return OhmicMaterial(name=name, particles=clump, electric_field = electric_field, boundary=boundary)
+        return sys
 
 
     def __init__(self, electric_field=np.zeros(3), boundary=None, particles=[], name='Voq', sigma=1, damping=0.0, plot_config=None):
         super().__init__(boundary=boundary, name=name, plot_config=plot_config, sigma=sigma, damping=damping)
         self.E = electric_field
         self.clump = particles
+        
 
     def find_principle_force(self,on=None): #currently this exclusively works with a constant exterior electric field.
-        f = super.find_principle_force(on)
+        f = super().find_principle_force(on)
         return f + on.q*self.E
+
+    def find_subsystem_force(self, on=None):
+        return np.zeros(3) #In order to make dynamics non inertial
+
+    def update(self,p):
+        p.m += p.dm
+        #works non inertially
+        p.dm = 0.0
+        noise = np.random.normal(scale=self.sigma)
+        #print("Noise = {}.".format(noise))
+        p.v = ((self.find_principle_force(on=p))*self.sigma**2/2.0/const.k/298.0 + noise)
+        dr = p.v *dt
+        #print("Proper update runs for simple brownian motion with dr = {}.".format(dr))
+        p.loc += dr
+        p.dv = p.dv * 0.0
+
+    def apply(self, force=np.zeros(3), to=None):
+        pass #does nothing by assumption
 
     
    
@@ -179,7 +210,7 @@ class Sheet(PrettySubsystem): #Linear subsystem (runs in O(number objects = n*m)
         self.clump = np.empty(shape=(self.m,self.n), dtype=object)
         self.past_interactions = []
 
-        dh =  get_unit_vector(self.horiz_axis) * self.horiz_scale
+        dh = get_unit_vector(self.horiz_axis) * self.horiz_scale
         dv = get_unit_vector(self.vertical_axis) * self.vertical_scale
 
         #start is initial refrence frame adjusted for bounds.
@@ -279,7 +310,8 @@ class String(PrettySubsystem):
     @staticmethod
     def make_string(uniform_mass=1, mass = None, count=1, path=None):
         #mass is a function that determines the mass of each particle
-        assert path is not None and isinstance(path, )
+        assert path is not None and isinstance(path, Path)
+        #path is the path object under the string
 
 
 

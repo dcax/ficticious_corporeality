@@ -1,8 +1,8 @@
 from .constants import *
-from .particles import Particle
 
 from pprint import pprint
 import numpy as np
+
 
 # Gets unit or direction vector associated with the vector (v).
 def get_unit_vector(v):
@@ -22,12 +22,7 @@ def project_onto_unit_vector(v=None,unit=None):
     #we assume used properly so that there is not a necessary check on this each time.
     return np.dot(v,unit)*unit
 
-def dist(x,y): #gets euclidean distance between points
-    if isinstance(x,Particle) and isinstance(y,Particle):
-        #distance defined by positions
-        x = x.loc
-        y = y.loc
-    return np.linalg.norm(x,y)
+
 
 def std_update_of_particle(p=None):
     #This performs the standard non contrained updating on a particle using Euler's linear approximation

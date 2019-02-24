@@ -33,7 +33,9 @@ class BoundlessBoundary(RandomBoundary):
         self.sigma = sigma #standard deviation of random point
 
     def random_point(self):
-        return np.random.normal(size=3,loc=self.center,scale=self.sigma)
+        point = np.random.normal(size=3,loc=self.center,scale=self.sigma)
+        #print("Point randomly chosen: {}.".format(point))
+        return point
 
 class ParallelogramBoundary(RegularBoundary):
     #Boundary with parallogram outer segment.
